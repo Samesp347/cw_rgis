@@ -76,21 +76,21 @@ mutate(iris_sub, sl_two_times = 2 * Sepal.Length)
 (x_max <- nrow(iris_sub))
 
 ##piping 
-iris_setosa <- filter(iris_sub, species == "setosa")
+iris_setosa <- filter(iris_sub, Species == "setosa")
 
-iris_sub %>% filter(spices)
+iris_sub %>% filter(Species == "setosa")
 
 # Excercise
-filter(iris_sub, species == "virginica")
+filter(iris_sub, Species == "virginica")
 
-select(iris_sub,Sepal.width)
-select(iris_sub,Sepal.width)
+select(iris_sub,Sepal.Width)
+select(iris_sub,Sepal.Width)
 
-excersise #3 
+# excersise #3 
 df0 <- iris_sub %>% 
   filter(Species == "virginica") %>% 
-  select(Sepal.width) %>% 
-  mutate(sw3 = 3 * Sepal.width)
+  select(Sepal.Width) %>% 
+  mutate(sw3 = 3 * Sepal.Width)
 
 ##Group operation 
 
@@ -104,10 +104,10 @@ iris_sub$Sepal.length
 # group_by() function
 df_summary <- iris_sub %>% 
   group_by(Species) %>% 
-  summarize(mean_sl = mean(Sepal.Length))
-sum_sl = sum(Sepal.Length)
-mean_pl = mean(Petal.Length)
-sum_pl = sum(Petal.Length)
+  summarize(mean_sl = mean(Sepal.Length),
+            sum_sl = sum(Sepal.Length),
+            mean_pl = mean(Petal.Length),
+            sum_pl = sum(Petal.Length))
 ## Join
 df1 <- tibble(Species = c("A", "B", "C"), 
               y = c(10, 12, 13))
