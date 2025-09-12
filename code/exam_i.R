@@ -14,15 +14,15 @@ mtcars_cyl6 <- filter (cyl == 6)
 # 2. Filter rows where number of gears (`gear`) is either 3 or 5
 # Use `%in%` to filter the `df_mtcars` dataset for these two `gear` values.
 # Assign to: `mtcars_g35`
-mtcars_g35 <- filter(df_mtcars,gears %in% c(3, 5))
+mtcars_g35 <- filter(df_mtcars,gear %in% c(3, 5))
 # 3. Filter rows where miles per gallon (`mpg`) is greater than 25
 # Create a subset of `df_mtcars` where `mpg > 25`.
 # Assign to: `mtcars_mpg25`
-mtcars_mpg25 <- filter(df_mtcars, mpg < 5)
+mtcars_mpg25 <- filter(df_mtcars, mpg > 5)
 # 4. Filter rows where weight (`wt`) is less than 2.5 AND number of cylinders (`cyl`) is 4
 # Combine logical conditions using `&`.
 # Assign to: `mtcars_light_cyl4`
-mtcars_light_cyl4 <- filter(df_mtcars, wt < 2,5 & cyl = 4)
+mtcars_light_cyl4 <- filter(df_mtcars, wt < 2.5 & cyl == 4)
 # 5. Sort `df_mtcars` by horsepower (`hp`) in ascending order
 # Use `arrange()` to sort the data.
 # Assign to: `mtcars_hp`
@@ -41,13 +41,13 @@ mtcars_no_draft <- select(df_mtcars, -drat)
 # 8. Add a new column `ptw` that equals the ratio of horsepower (`hp`) to weight (`wt`) (`hp / wt`)
 # Use `mutate()` to add the new column.
 # Assign to: `mtcars_with_ptw`
-mtcars_with_ptw <- mutate(df_mtcars, ptw = hp, wt)
+mtcars_with_ptw <- mutate(df_mtcars, ptw = hp / wt)
 
 # 9. Identify the car `model` with the highest `ptw` among cars with six cylinders (`cyl == 6`).
 # Hint: Use `mtcars_with_ptw` and a chain of `filter()` and `arrange()` with `%>%`.
 # Write the car model here: YOUR ANSWER Lotus europa
-filter(mtcars_with_ptw)
-arrange(cyl = 6)
+filter(mtcars_with_ptw, cyl == 6)
+
 
 # 10. Group by number of gears (`gear`) and summarize minimum & maximum values of `mpg`
 # Use `group_by()` and `summarize()` to calculate minimum & maximum values of `mpg` within each group.
@@ -56,7 +56,7 @@ arrange(cyl = 6)
 # Function `max()` returns the maximum value in a vector.
 # Assign to: `mtcars_mpg_by_gear`
 mtcars_mpg_by_gear <- df_mtcars %>% 
-  group_by(gear)
+  group_by(gear) %>% 
 summarize(min(mpg), max(mpg))
 
 # ggplot ------------------------------------------------------------------
@@ -79,8 +79,8 @@ g_scat <- ggplot(data = iris,
 # Create a scatter plot with `Petal.Width` on the x-axis and `Petal.Length` on the y-axis,
 # coloring points by `Species`.
 g_scat_col <- ggplot(data = iris,
-                     mapping = aes(x = Sepal.Width,
-                                   y = Sepal.Length,
+                     mapping = aes(x = Petal.Width,
+                                   y = Petal.Length,
                                    color = Species)) +
   geom_point()
 
