@@ -179,7 +179,6 @@ df_mtcars %>%
 ggplot(aes(x = mu_wt,
            y = mu_qsec)) +
   geom_point()
- 
 
 
 
