@@ -82,7 +82,7 @@ ggplot() +
   geom_sf(data = sf_str)
   
 ##Exercise read stream line data for ashe County
-sf_str_as <- readRDS(file = here("data/sf_stream_as.rds"))
+sf_str_as <- readRDS(file = here("data/sf_stream_gi.rds"))
 
 
 ##Exercise Chack coordinate reference systems 
