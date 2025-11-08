@@ -37,10 +37,8 @@ sf_site <- df_site %>%
 # From `sf_nc_county`, select only the county polygons of the following counties: 
 #   "guilford", "randolph", "davidson", and "forsyth". 
 # Save the result as `sf_four`.
-(sf_nc_county <- readRDS("data/sf_nc_county.rds"))
-
 sf_four <- sf_nc_county %>% 
-  filter(county == "guildford")
+  filter(county %in% c("guilford", "randolph", "davidson", "forsyth"))
  
 
 # Q3. 
@@ -48,8 +46,9 @@ sf_four <- sf_nc_county %>%
 #   the four selected counties stored in `sf_four`. 
 # Make sure that the output object is a POINT layer after spatial join.
 # Remove any rows without a `county` value and save the result as `sf_site_four`.
-sf_site_four <- st_join( x = sf_site,
-                         y = sf_four)
+sf_site_four <- st_join( sf_site,
+                         sf_four,
+                         left = FALSE)
 
 # Q4. 
 # Create a map showing the four selected counties (`sf_four`) 
@@ -63,9 +62,11 @@ ggplot() +
 #   with the appropriate CRS, UTM Zone 17N (EPSG: 32617) 
 #   so that distances are measured in meters. 
 # Then, find the maximum distance among all site pairs.
-st_transform(sf_site_four, crs = 32617)
+sf_site_four_utm <- st_transform(sf_site_four, crs = 32617)
+distance_matrix <- st_distance(sf_site_four_utm)
+max_distance <- max(distance_matrix)
 # 
-# ENTER YOUR ANSWER HERE: 884804, 4046044
+# ENTER YOUR ANSWER HERE: 71724.58 m
 
 
 # raster data analysis ----------------------------------------------------
@@ -81,9 +82,7 @@ st_transform(sf_site_four, crs = 32617)
 # 
 # Load this raster as `spr_land` and display the unique land-cover codes it contains.
 spr_land <- rast("data/spr_land_reclass.tif")
-
-ggplot() +
-  geom_spatraster(data = spr_land)
+ unique_codes <- unique(spr_land)
 
 # Q7. 
 # Reclassify the raster `spr_land` to create a new raster object `spr_crop` 
@@ -94,14 +93,12 @@ ggplot() +
 #   1100 = 0 (urban)
 #   0 = 0 (other)
 spr_crop <- st_as_stars(spr_land)
-mapview(spr_land)
 
 # Q8. 
 # Crop the cropland raster (`spr_crop`) to the extent of the four selected counties 
 # (`sf_four`; "guilford", "randolph", "davidson", and "forsyth")
 # Save the resulting cropped raster as `spr_crop_four`.
-spr_crop_four <- crop( x = sf_four,
-                       y = spr_land)
+spr_crop_four <- st_crop(spr_crop, sf_four)
 
 # Q9. 
 # Create a map showing the cropped cropland raster (`spr_crop_four`) 
@@ -140,11 +137,9 @@ extract(x = spr_tmp,
 # Be sure to first transform the coordinate reference system to UTM Zone 17N (EPSG: 32617) 
 # so that the buffer distance is measured in meters.
 sf_site_four_buff <- sf_site_four %>% 
-  st_transform(crs = 32617)
+  st_transform(crs = 32617) %>% 
+  st_buffer(dist = 3000)
 
-
-sf_site_four_buff %>% 
-  st_buffer(dist = 10000)
 
 # Q13. Project the cropped cropland raster (`spr_crop_four`) 
 # to the same UTM coordinate reference system (EPSG: 32617). 
